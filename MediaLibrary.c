@@ -35,6 +35,8 @@ bool json_token_streq(char *js, jsmntok_t *t, char *s);
 int countTokens(int stringLen, char* json_string);
 char* concat(const char *s1, const char *s2);
 Movie* parseObject(jsmntok_t token, char* JSON_STRING);
+bool parseJson(char* filename);
+
 
 int libraryCount = 0;
 
@@ -135,6 +137,12 @@ char* readFile(char* filename){
             }
         }
     }
+    buff = realloc(buff, (counter + 1 * sizeof(char)));
+    if(buff == NULL){
+        return buff;
+    }
+    counter++;
+    buff[counter] =  '\0';
     
     return buff;
 }
@@ -211,10 +219,19 @@ Movie* parseObject(jsmntok_t token, char* JSON_STRING){
     substring = strndup(JSON_STRING + token.start, token.end - token.start);
     jsmn_parser myparser;
     jsmn_init(&myparser);
-    jsmntok_t tokens[256];
+    
     int r=0;
     
-    r = jsmn_parse(&myparser, substring, strlen(substring),tokens, 256);
+    r = jsmn_parse(&myparser, substring, strlen(substring),NULL, 256);
+     printf("R IS CURRENTLY %d\n", r);
+    if(r<1){
+        return NULL;
+    }
+    
+    jsmntok_t tokens[r];
+    jsmn_init(&myparser);
+    jsmn_parse(&myparser, substring, strlen(substring),tokens, r);
+    
     int i = 0;
     printf("\n%d\n", r);
     int tokensSize = sizeof(tokens)/sizeof(tokens[0]);
@@ -224,7 +241,7 @@ Movie* parseObject(jsmntok_t token, char* JSON_STRING){
 
     
     
-    for(i = 0; i < tokensSize; i++){
+    for(i = 0; i < r; i++){
         if (jsoneq(substring, &tokens[i], "Released") == 0) {
 			/* We may use strndup() to fetch string value */
 			char* released = malloc(sizeof(char) * (tokens[i+1].end - tokens[i+1].start));
@@ -360,29 +377,29 @@ int countTokens(int stringLen, char* json_string){
     }else{
         return 0;
     }
-    
-    
 }
-int main(){
-    char *filename = "movies.json";
+
+
+bool parseJson(char* filename){
+    bool ret = false;
     char *JSON_STRING;
     int r;
     int i;
     
-    JSON_STRING = readFile(filename);
-    
+    JSON_STRING = readFile("movies.json");
+   // printf("\n%s\n", JSON_STRING);
     jsmn_parser parser;
-    
-    
-    
-    r = jsmn_parse(&parser, JSON_STRING, strlen(JSON_STRING), NULL, countTokens(strlen(JSON_STRING),JSON_STRING ));
-    
+    jsmn_init(&parser);
+    r = jsmn_parse(&parser, JSON_STRING, strlen(JSON_STRING), NULL ,0);
+// printf("r\n%d\n ",r);
+    printf("\n%d\njson string length ",(int)strlen(JSON_STRING));
     if(r>0){
         jsmn_init(&parser);
         jsmntok_t tokens[r];
         jsmn_parse(&parser, JSON_STRING, strlen(JSON_STRING), tokens, r);
         int tokensSize = sizeof(tokens)/sizeof(tokens[0]);
         int k;
+        printf("\n%d\n",r);
         //k=1 because we skip the first object...because the whole thing is an object
         for(k = 1; k < r; k++){
             if(tokens[k].type == 1){
@@ -390,9 +407,14 @@ int main(){
                 parseObject(tokens[k], JSON_STRING);
             }
         }
-        listAll();
     }
+}
+
+int main(){
+    char *filename = "movies.json";
+    parseJson(filename);
     
+    listAll();
 }
 
 
