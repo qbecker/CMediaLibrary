@@ -1,0 +1,42 @@
+{  
+  "Squatters Rights": {
+    "Released": "07 Jun 1946",
+    "Rated": "N/A",
+    "Actors": ["Dessie Flynn", "James MacDonald"],
+    "Plot": "Chip-n-Dale have set up house in the wood stove of Mickeys cabin. Pluto knows they are there, but Mickey only knows his matches keep going out when he tries to light a fire.",
+    "Runtime": "7 min",
+    "Genre": ["Cartoon", "Animation", "Family"],
+    "Filename": "MMSquattersRights.mp4",
+    "Title": "Squatters Rights"
+  },
+   "Pretty Woman": {
+    "Released": "10 Dec 1973",
+    "Rated": "NR",
+    "Actors": ["Roy Orbison"],
+    "Plot": "One of Roys most famous songs.",
+    "Runtime": "3 min",
+    "Genre": ["Country Music"],
+    "Filename": "RoyOrbisonPrettyWoman.mp4",
+    "Title": "Pretty Woman"
+  },
+  "Minions Banana Song": {
+    "Released": "12 Dec 2015",
+    "Rated": "PG",
+    "Actors": ["Steve", "Kevin", "Bob", "Stuart"],
+    "Plot": "Banana is a song sung by The Minions in the teaser trailer of Despicable Me 2. It is a parody of the Beach Boys Barbara Ann. One minion gets annoyed by another, most likely Stuart, who keeps on playing his party horn while they are singing. So, at the end, he punched Stuart.",
+    "Runtime": "5 min",
+    "Genre": ["Animation", "Family", "Cartoon"],
+    "Filename": "MinionsBananaSong.mp4",
+    "Title": "Minions Banana Song"
+  },
+  "Minions Banana": {
+    "Released": "12 Dec 2015",
+    "Rated": "PG",
+    "Actors": ["Steve", "Kevin", "Stuart"],
+    "Plot": "Minions fight over a banana. In the process, they wreak havoc in the Bomb Factory.",
+    "Runtime": "5 min",
+    "Genre": ["Animation", "Family", "Cartoon"],
+    "Filename": "MinionsBanana.mp4",
+    "Title": "Minions Banana"
+  }
+}
