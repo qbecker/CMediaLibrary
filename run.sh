@@ -1,3 +1,3 @@
 #!/bin/bash
-gcc -o  Test.o MediaLibrary.c jsmn.c
+gcc -pthread -g -o Test.o MediaLibrary.c jsmn.c
 ./Test.o
