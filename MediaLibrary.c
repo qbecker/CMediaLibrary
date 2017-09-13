@@ -42,6 +42,8 @@ bool parseJson(char* filename);
 char* parseMessage(char* message);
 char* getTitles();
 char* surroundInQuote(char* item);
+char *movieToJson(Movie* movie);
+char* createToken(char* key, char* value);
 
 int libraryCount = 0;
 
@@ -367,12 +369,16 @@ char* parseMessage(char* message){
         }
     }
     if(strcmp(method, "getTitles") == 0){
-	   
 	    ret = getTitles();
+	}else if(strcmp(method, "get") == 0){
+	    Movie* movie = get(params);
+	    if(movie != NULL){
+	        ret = movieToJson(movie);
+	        
+	    }
 	}
     free(params);
     free(method);
-   // printf("\n%s\n",ret);
     return ret;
 }
 
@@ -451,10 +457,7 @@ bool parseJson(char* filename){
 
 char* surroundInQuote(char* item){
     char*ret;
-    printf("\nin surround\n");
     if(item != NULL){
-        printf("\n its not null\n");
-        printf("%s", item);
         ret = concat("\"",item, NULL);
         ret = concat(ret, "\"", NULL);
     }
@@ -471,7 +474,43 @@ char* packageMessage(char* message){
     return ret;
 }
 
+
+
+char* createToken(char* key, char* value){
+    char* ret;
+    ret = concat(key, value, ":");
+    return ret;
+}
+
+
+
+
+char* movieToJson(Movie* movie){
+    char* ret = NULL;
+    char* title = createToken(surroundInQuote("Title"), surroundInQuote(movie->title));
+    char* fileName = createToken(surroundInQuote("Filename"), surroundInQuote(movie->filename));
+    char* genre = createToken(surroundInQuote("Genre"), surroundInQuote(movie->genre));
+    char* runtime = createToken(surroundInQuote("Runtime"), surroundInQuote(movie->runtime));
+    char* plot = createToken(surroundInQuote("Plot"), surroundInQuote(movie->plot));
+    char* actors = createToken(surroundInQuote("Actors"), surroundInQuote(movie->actors));
+    char* rated = createToken(surroundInQuote("Rated"), surroundInQuote(movie->rated));
+    char* released = createToken(surroundInQuote("Released"), surroundInQuote(movie->released));
+    ret = concat("", surroundInQuote(movie->title), NULL);
+    ret = concat(ret, ":", NULL);
+    ret = concat(ret, title, "{");
+    ret = concat(ret, fileName, ",");
+    ret = concat(ret, genre, ",");
+    ret = concat(ret, runtime, ",");
+    ret = concat(ret, plot, ",");
+    ret = concat(ret, actors, ",");
+    ret = concat(ret, rated, ",");
+    ret = concat(ret, released, ",");
+    ret = concat(ret, "}", NULL);
+    return ret;
+}
+
 void* readRequest(void* param){
+    
     int sock = *((int *) param);
     
         int n;
