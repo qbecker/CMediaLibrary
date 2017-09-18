@@ -36,7 +36,7 @@ bool add(Movie* movie);
 char* readFile(char* filename);
 jsmntok_t *json_tokenise(char *js);
 bool json_token_streq(char *js, jsmntok_t *t, char *s);
-char* concat(const char *s1, const char *s2, const char *s3);
+char* concat( char *s1,  char *s2,  char *s3);
 Movie* parseObject(jsmntok_t token, char* JSON_STRING);
 bool parseJson(char* filename);
 char* parseMessage(char* message);
@@ -157,7 +157,7 @@ Movie* get(char title[]){
         int v;
         v = strcmp(DB[count].title, title);
         if(v == 0){
-            retVal = malloc(sizeof( Movie));
+            //retVal = malloc(sizeof( Movie));
             retVal = &DB[count];
         }
     }
@@ -208,7 +208,7 @@ static int jsoneq(const char *json, jsmntok_t *tok, const char *s) {
 
 Movie* parseObject(jsmntok_t token, char* JSON_STRING){
     
-    char* substring = malloc(sizeof(char) * (token.end - token.start));
+    char* substring = NULL;
     substring = strndup(JSON_STRING + token.start, token.end - token.start);
     jsmn_parser myparser;
     jsmn_init(&myparser);
@@ -233,7 +233,7 @@ Movie* parseObject(jsmntok_t token, char* JSON_STRING){
     for(i = 0; i < r; i++){
         if (jsoneq(substring, &tokens[i], "Released") == 0) {
 			/* We may use strndup() to fetch string value */
-			char* released = malloc(sizeof(char) * (tokens[i+1].end - tokens[i+1].start));
+			char* released = NULL;
 			released = strndup(substring + tokens[i+1].start, tokens[i+1].end-tokens[i+1].start);
 			strcpy(tempMovie->released, released);
 			free(released);
@@ -242,7 +242,7 @@ Movie* parseObject(jsmntok_t token, char* JSON_STRING){
 		} else if (jsoneq(substring, &tokens[i], "Rated") == 0) {
 			/* We may additionally check if the value is either "true" or "false" */
 			//printf("- Rated: %.*s\n", tokens[i+1].end-tokens[i+1].start, substring + tokens[i+1].start);
-			char* rated = malloc(sizeof(char) * (tokens[i+1].end-tokens[i+1].start));
+			char* rated = NULL;
 			rated = strndup(substring + tokens[i+1].start, tokens[i+1].end-tokens[i+1].start);
 			strcpy(tempMovie->rated, rated);
 			free(rated);
@@ -251,7 +251,7 @@ Movie* parseObject(jsmntok_t token, char* JSON_STRING){
 		else if (jsoneq(substring, &tokens[i], "Runtime") == 0) {
 			/* We may additionally check if the value is either "true" or "false" */
 			//printf("- Runtime: %.*s\n", tokens[i+1].end-tokens[i+1].start, substring + tokens[i+1].start);
-			char* runtime = malloc(sizeof(char) * (tokens[i+1].end-tokens[i+1].start));
+			char* runtime = NULL;
 			runtime = strndup(substring + tokens[i+1].start, tokens[i+1].end-tokens[i+1].start);
 			strcpy(tempMovie->runtime, runtime);
 			free(runtime);
@@ -260,7 +260,7 @@ Movie* parseObject(jsmntok_t token, char* JSON_STRING){
 		else if (jsoneq(substring, &tokens[i], "Filename") == 0) {
 			/* We may additionally check if the value is either "true" or "false" */
 		//	printf("- Filename: %.*s\n", tokens[i+1].end-tokens[i+1].start, substring + tokens[i+1].start);
-			char* filename = malloc(sizeof(char) * (tokens[i+1].end-tokens[i+1].start));
+			char* filename = NULL;
 			filename = strndup(substring + tokens[i+1].start, tokens[i+1].end-tokens[i+1].start);
 			strcpy(tempMovie->filename, filename);
 			free(filename);
@@ -270,7 +270,7 @@ Movie* parseObject(jsmntok_t token, char* JSON_STRING){
 			/* We may additionally check if the value is either "true" or "false" */
 			//printf("- Title: %.*s\n", tokens[i+1].end-tokens[i+1].start, substring + tokens[i+1].start);
 		    //printf("%s", substring + tokens[i+1].start);
-			char* title = malloc(sizeof(char) * (tokens[i+1].end-tokens[i+1].start));
+			char* title = NULL;
 			title = strndup(substring + tokens[i+1].start, tokens[i+1].end-tokens[i+1].start);
 			strcpy(tempMovie->title, title);
 			free(title);
@@ -279,7 +279,7 @@ Movie* parseObject(jsmntok_t token, char* JSON_STRING){
 		else if (jsoneq(substring, &tokens[i], "Plot") == 0) {
 			/* We may want to do strtol() here to get numeric value */
 		//	printf("- Plot: %.*s\n", tokens[i+1].end-tokens[i+1].start, substring + tokens[i+1].start);
-			char* plot = malloc(sizeof(char) * (tokens[i+1].end-tokens[i+1].start));
+			char* plot = NULL;
 			plot = strndup(substring + tokens[i+1].start, tokens[i+1].end-tokens[i+1].start);
 			strcpy(tempMovie->plot, plot);
 			free(plot);
@@ -294,7 +294,7 @@ Movie* parseObject(jsmntok_t token, char* JSON_STRING){
 			for (j = 0; j < tokens[i+1].size; j++) {
 				jsmntok_t *g = &tokens[i+j+2];
 				//printf("  * %.*s\n", g->end - g->start, substring + g->start);
-				char* temp = malloc(sizeof(char) *(g->end - g->start));
+				char* temp = NULL;
 				//temp is the string value of the actors from the json object
 				temp = strndup(substring + g->start, g->end - g->start);
 				char *actors = tempMovie->actors;
@@ -312,7 +312,7 @@ Movie* parseObject(jsmntok_t token, char* JSON_STRING){
 			for (j = 0; j < tokens[i+1].size; j++) {
 				jsmntok_t *g = &tokens[i+j+2];
 				//printf("  * %.*s\n", g->end - g->start, substring + g->start);
-				char* temp = malloc(sizeof(char) *(g->end - g->start));
+				char* temp = NULL;
 				//temp is the string value of the genre from the json object
 				temp = strndup(substring + g->start, g->end - g->start);
 				char *genre = tempMovie->genre;
@@ -332,8 +332,8 @@ Movie* parseObject(jsmntok_t token, char* JSON_STRING){
 
 char* parseMessage(char* message){
     char* ret;
-    char* method = malloc(sizeof(char));
-    char* params = malloc(sizeof(char));
+    char* method = NULL;
+    char* params = NULL;
     int r;
     jsmn_parser parser;
     jsmn_init(&parser);
@@ -346,7 +346,6 @@ char* parseMessage(char* message){
         for(k = 0; k< r; k++){
             if (jsoneq(message, &tokens[k], "method") == 0) {
 			/* We may use strndup() to fetch string value */
-			method = malloc(sizeof(char) * (tokens[k+1].end - tokens[k+1].start));
 			method = strndup(message + tokens[k+1].start, tokens[k+1].end-tokens[k+1].start);
 			
 			
@@ -358,7 +357,6 @@ char* parseMessage(char* message){
 			}
 			for (j = 0; j < tokens[k+1].size; j++) {
 				jsmntok_t *g = &tokens[k+j+2];
-			     params = malloc(sizeof(char) *(g->end - g->start));
 				params = strndup(message + g->start, g->end - g->start);
 				
 			}
@@ -370,19 +368,22 @@ char* parseMessage(char* message){
     }
     if(strcmp(method, "getTitles") == 0){
 	    ret = getTitles();
+	    
 	}else if(strcmp(method, "get") == 0){
 	    Movie* movie = get(params);
 	    if(movie != NULL){
 	        ret = movieToJson(movie);
-	        
+	        free(method);
+	        //free(movie);
 	    }
+	    
 	}
     free(params);
-    free(method);
+    
     return ret;
 }
 
-char* concat(const char *s1, const char *s2, const char *s3){
+char* concat(char *s1,  char *s2, char *s3){
     char* result = NULL;
     if(s3 != NULL){
         result = malloc(strlen(s1)+strlen(s2)+strlen(s3)+1);
@@ -443,8 +444,9 @@ bool parseJson(char* filename){
                Movie* movieToAdd = parseObject(tokens[k], JSON_STRING);
                if(movieToAdd != NULL){
                    add(movieToAdd);
+                   free(movieToAdd);
                }
-               free(movieToAdd);
+               
             }
         }
     }
@@ -467,10 +469,14 @@ char* surroundInQuote(char* item){
 
 char* packageMessage(char* message){
     char* ret;
+    char* temp;
     char* firstHalf = "{\"result\": [";
     char* end = "]}";
     ret = concat(firstHalf, message, NULL);
-    ret = concat(ret, end, NULL);
+    temp = ret;
+    free(ret);
+    ret = concat(temp, end, NULL);
+    free(temp);
     return ret;
 }
 
@@ -482,11 +488,9 @@ char* createToken(char* key, char* value){
     return ret;
 }
 
-
-
-
 char* movieToJson(Movie* movie){
     char* ret = NULL;
+    char* temp;
     char* title = createToken(surroundInQuote("Title"), surroundInQuote(movie->title));
     char* fileName = createToken(surroundInQuote("Filename"), surroundInQuote(movie->filename));
     char* genre = createToken(surroundInQuote("Genre"), surroundInQuote(movie->genre));
@@ -496,16 +500,36 @@ char* movieToJson(Movie* movie){
     char* rated = createToken(surroundInQuote("Rated"), surroundInQuote(movie->rated));
     char* released = createToken(surroundInQuote("Released"), surroundInQuote(movie->released));
     ret = concat("", surroundInQuote(movie->title), NULL);
-    ret = concat(ret, ":", NULL);
-    ret = concat(ret, title, "{");
-    ret = concat(ret, fileName, ",");
-    ret = concat(ret, genre, ",");
-    ret = concat(ret, runtime, ",");
-    ret = concat(ret, plot, ",");
-    ret = concat(ret, actors, ",");
-    ret = concat(ret, rated, ",");
-    ret = concat(ret, released, ",");
-    ret = concat(ret, "}", NULL);
+    temp = ret;
+    free(ret);
+    ret = concat(temp, ":", NULL);
+    temp = ret;
+    free(ret);
+    ret = concat(temp, title, "{");
+    temp = ret;
+    free(ret);
+    ret = concat(temp, fileName, ",");
+    temp = ret;
+    free(ret);
+    ret = concat(temp, genre, ",");
+    temp = ret;
+    free(ret);
+    ret = concat(temp, runtime, ",");
+    temp = ret;
+    free(ret);
+    ret = concat(temp, plot, ",");
+    temp = ret;
+    free(ret);
+    ret = concat(temp, actors, ",");
+    temp = ret;
+    free(ret);
+    ret = concat(temp, rated, ",");
+    temp = ret;
+    free(ret);
+    ret = concat(temp, released, ",");
+    temp = ret;
+    free(ret);
+    ret = concat(temp, "}", NULL);
     return ret;
 }
 
@@ -531,8 +555,7 @@ void* readRequest(void* param){
         parsed = packageMessage(parsed);
         printf("%s", parsed);
         send(sock, parsed, strlen(parsed),0);
-        free(message);
-        free(parsed);
+        return;
 }
 
 int main(){
